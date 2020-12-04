@@ -1,0 +1,294 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<!-- saved from url=(0052)file:///C:/Users/Ziad/Desktop/New%20folder/Jobs.html -->
+<html lang="en" style="height: auto;">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AdminLTE 3 | Top Navigation</title>
+
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="~/plugins/fontawesome-free/css/all.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="~/dist/css/adminlte.min.css">
+
+
+    <script src="~/lib/jquery/jquery.min.js"></script>
+
+    <script>
+        $(function () {
+            var mp = new Map(); // is used to get the id when we know the CompanyName
+            // Read from api
+            $.ajax({
+                type: "get",
+                url: "/api/company",
+                success: function (res) {
+                    $.each(res, function (idx, obj) {
+                        mp.set(obj.companyName, obj.id);
+                    });
+                }
+            });
+            // Edit company name
+            var compNameBeforeEdit;
+            $("#tbody1").on("click", ".edt", function () {
+                var compName = $(this).parent().prev().children().text();
+                compNameBeforeEdit = compName;
+                $(this).parent().prev().replaceWith('<td> <input type="text" value="' + compName + '"> </td> ');
+                //$(this).replaceWith('<input type="button" value="Save" class="save">');
+                $(this).replaceWith('<a class="btn btn-info btn-sm save" href="#"> <i class="fas fa-pencil-alt"></i> Save Changes</a>');
+            });
+
+            // Save
+            $("#tbody1").on("click", ".save", function () {
+                var compName = $(this).parent().prev().find("input").val();
+                var compId = mp.get(compNameBeforeEdit);
+                var ptr1 = $(this);
+                var ptr2 = $(this).parent().prev().children();
+                var obj = { "id": compId, "newCompName": compName};
+                $.ajax({
+                    type: "post",
+                    data: JSON.stringify(obj),
+                    contentType: "application/json",
+                    url: "/admin/CompanyNameEdit?id=" + compId + "&newCompName=" + compName + "",
+                    success: function (res) {
+                        ptr1.replaceWith('<a class="btn btn-info btn-sm edt" href="#"><i class="fas fa-pencil-alt"></i> Edit</a>');
+                        ptr2.replaceWith('<a>' + compName + '</a>');
+                        mp.delete(compNameBeforeEdit);
+                        mp.set(compName, compId);
+                    }
+                });
+            });
+
+            // a company departments
+            $("#tbody1").on("click", ".dep", function () {
+                var compName = $(this).parent().prev().children().text();
+                var compId = mp.get(compName);
+                window.location.replace("/Admin/DepartmentsDisplay?id="+compId);
+            });
+
+            // Delete access HR Director
+            $("#tbody2").on("click", ".del", function () {
+                var empId = $(this).parent().prev().prev().prev().prev().text();
+                var ptr = $(this).parent().parent();
+                $.ajax({
+                    type: "post",
+                    url: "/admin/DeleteHRDirctorAccess?empId="+empId,
+                    success: function (res) {
+                        ptr.remove();
+                    }
+                });
+            });
+
+        });
+
+    </script>
+
+</head>
+<body class="layout-top-nav" style="height: auto;">
+    <div class="wrapper">
+
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand-md navbar-light navbar-white">
+            <div class="container">
+
+                <div class="collapse navbar-collapse order-3" id="navbarCollapse">
+                    <!-- Left navbar links -->
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a href="~/Admin/HRDirectorCreation" class="nav-link">Add HR Director</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="~/Admin/CompanyCreation" class="nav-link">Add Company</a>
+                        </li>
+                    </ul>
+                       
+                </div>
+
+                <!-- Right navbar links -->
+
+            </div>
+        </nav>
+        <!-- /.navbar -->
+        <!-- Content Wrapper. Contains page content -->
+        <div class="content-wrapper" style="min-height: 665px;">
+            <!-- Content Header (Page header) -->
+            <div class="content-header">
+                <div class="container">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Admin Page</h1>
+                        </div><!-- /.col -->
+                        <!-- /.col -->
+                    </div><!-- /.row -->
+                </div><!-- /.container-fluid -->
+            </div>
+            <!-- /.content-header -->
+            <!-- Main content -->
+            <section class="content">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Companies</h3>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+
+                        </div>
+                    </div>
+                    <div class="card-body p-0" style="display: block;">
+                        <table class="table table-striped projects">
+                            <thead>
+                                <tr>
+                                    <th style="width: 1%">
+                                        #
+                                    </th>
+                                    <th style="width: 70%">
+                                        Company Name
+                                    </th>
+                                    <th style="width: 20%">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody1">
+
+                                @inject RecruitmentApp.Repository.ICompanyRepo compRep
+
+                                @foreach (var comp in compRep.GetAllCompanies())
+                                {
+                                    <tr>
+                                        <td>
+                                            #
+                                        </td>
+                                        <td>
+                                            <a>@comp.CompanyName</a>
+                                        </td>
+                                        <td class="project-actions text-right">
+                                            <a class="btn btn-primary btn-sm dep" href="#">
+                                                <i class="fas fa-folder">
+                                                </i>
+                                                Departments
+                                            </a>
+                                            <a class="btn btn-info btn-sm edt" href="#">
+                                                <i class="fas fa-pencil-alt">
+                                                </i>
+                                                Edit
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+
+                <!-- Default box -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">Hr Directors</h3>
+
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+
+                        </div>
+                    </div>
+                    <div class="card-body p-0" style="display: block;">
+                        <table class="table table-striped projects">
+                            <thead>
+                                <tr>
+                                    <th style="width: 10%">
+                                        ID
+                                    </th>
+                                    <th style="width: 20%">
+                                        HR Director Name
+                                    </th>
+                                    <th style="width: 30%">
+                                        HR Director Email
+                                    </th>
+                                    <th style="width: 20%">
+                                        HR Director Company
+                                    </th>
+                                    <th style="width: 20%">
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody2">
+                                
+                                @inject RecruitmentApp.Repository.IEmployeeRepo empRep
+                                
+                                @inject RecruitmentApp.Repository.ICompanyRepo compRep
+                                
+                                @foreach (var item in empRep.GetAllHRDirectors())
+                                {
+                                <tr>
+                                    <td>
+                                        @item.Id
+                                    </td>
+                                    <td>
+                                        <a>
+                                            @item.Name
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a>
+                                            @item.Email
+                                        </a>
+                                    </td>
+                                    <td>
+                                        <a>
+                                            @compRep.GetCompany(item.CompanyId).CompanyName  
+                                        </a>
+                                    </td>
+
+                                    <td class="project-actions text-right">
+                                        <a class="btn btn-danger btn-sm del" href="#">
+                                            <i class="fas fa-trash">
+                                            </i>
+                                            Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- /.card-body -->
+                </div>
+                <!-- /.card -->
+
+            </section>
+            <!-- /.content -->
+        </div>
+        <!-- /.content-wrapper -->
+        <!-- Control Sidebar -->
+        <!-- /.control-sidebar -->
+        <!-- Main Footer -->
+
+    </div>
+    <!-- ./wrapper -->
+    <!-- REQUIRED SCRIPTS -->
+    <!-- jQuery -->
+    <script src="~/plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="~/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
+    <!-- AdminLTE App -->
+    <script src="~/dist/js/adminlte.min.js"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="~/dist/js/demo.js"></script>
+
+
+</body>
+</html>

@@ -1,0 +1,123 @@
+﻿@model RecruitmentApp.Entities.Op_Employee
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>AdminLTE 3 | Registration Page</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- icheck bootstrap -->
+    <link rel="stylesheet" href="../../plugins/icheck-bootstrap/icheck-bootstrap.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+</head>
+<body>
+
+    <h4>Add Employee</h4>
+    <hr />
+    <div class="container">
+        <div class="card card-primary">
+            <form asp-action="addemp">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PhoneNumber" class="control-label"></label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Address" class="control-label"></label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UniversityName" class="control-label"></label>
+                    <input asp-for="UniversityName" class="form-control" />
+                    <span asp-validation-for="UniversityName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UniversityMajor" class="control-label"></label>
+                    <input asp-for="UniversityMajor" class="form-control" />
+                    <span asp-validation-for="UniversityMajor" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="GraduationYear" class="control-label"></label>
+                    <input asp-for="GraduationYear" class="form-control" />
+                    <span asp-validation-for="GraduationYear" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LinkedInAccount" class="control-label"></label>
+                    <input asp-for="LinkedInAccount" class="form-control" />
+                    <span asp-validation-for="LinkedInAccount" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="CompanyId" class="control-label"></label>
+                    <select asp-for="CompanyId" class="form-control" asp-items="ViewBag.CompanyId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="DepartmentName" class="control-label"></label>
+                    <select asp-for="DepartmentName" class="form-control" asp-items="ViewBag.DepartmentName"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EmployeePosition" class="control-label"></label>
+                    <input asp-for="EmployeePosition" class="form-control" />
+                    <span asp-validation-for="EmployeePosition" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="HiringDate" class="control-label"></label>
+                    <input asp-for="HiringDate" class="form-control" />
+                    <span asp-validation-for="HiringDate" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EmployeeStatusId" class="control-label"></label>
+                    <select asp-for="EmployeeStatusId" class="form-control" asp-items="ViewBag.EmployeeStatusId"></select>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Comment" class="control-label"></label>
+                    <input asp-for="Comment" class="form-control" />
+                    <span asp-validation-for="Comment" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="EmployeeTypeId" class="control-label"></label>
+                    <select asp-for="EmployeeTypeId" class="form-control" asp-items="ViewBag.EmployeeTypeId"></select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
+    <script src="../../plugins/jquery/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="../../dist/js/adminlte.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>AdminLTE 3 | General Form Elements</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="../../plugins/fontawesome-free/css/all.min.css">
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="../../dist/css/adminlte.min.css">
+    <!-- Google Font: Source Sans Pro -->
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+    <script src="~/lib/jquery/jquery.min.js"></script>
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            var candId = '@ViewBag.candId'
+            var appId=0
+
+            $.ajax({
+            url: '/RecruiterOperations/getApplicationData?candId=' + candId,
+                success: function (result) {
+                    $.each($(result), function (i, elem) {
+                        appId = elem.appId;
+                        $('#Posistion').val(elem.jobPos);
+                        $('#Describtion').val(elem.jobDesc);
+                        $('#DepartmentName').val(elem.jobDepart);
+                        $('#phaseName').val(elem.phaseName);
+
+                    })
+                }
+            })
+            
+            $("#addPhase").click(function () {
+                
+                var phaseTask = $('#phaseTask').val();
+                var PhaseComment = $('#PhaseComment').val();
+                var phaseId = $('#phases').find(":checked").attr("id");
+                
+                $.ajax({
+                    url: '/RecruiterOperations/addPhase?appId=' + appId + '&phaseId=' + phaseId + '&PhaseComment=' + PhaseComment + '&phaseTask=' + phaseTask,
+                    success: function (result) {
+                        alert(result);
+                    }
+                })
+                
+            })
+            $("#loadPhases").click(function () {
+                $.ajax({
+                    url: '/RecruiterOperations/getPhasesForApp?appId=' + appId,
+                    success: function (result) {
+                        $("tbody").empty();
+                        $.each($(result), function (i, elem) {
+                            $("tbody").append('<tr><td>' + elem.phaseName + '</td><td>' + elem.phaseTask + ' </td> <td>' + elem.phaseComm + '</td> </tr>');
+                        })
+                    }
+                })
+            })
+        })
+        function getalldata() {
+            var searchWord = $('#SearchWord').val();
+
+        }
+
+
+    </script>
+</head>
+<body>
+    <br/><br />
+    <section class="content">
+        <div class="container-fluid">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Application Data</h3>
+                </div>
+
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Posistion</label>
+                        <input type="text" class="form-control" id="Posistion">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Describtion</label>
+                        <input type="text" class="form-control" id="Describtion" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">DepartmentName</label>
+                        <input type="text" class="form-control" id="DepartmentName" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Current Phase</label>
+                        <input type="text" class="form-control" id="phaseName" placeholder="Password">
+                    </div>
+
+
+                </div>
+
+
+
+            </div>
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Phases</h3>
+                </div>
+                <div class="card-footer">
+                    <button id="loadPhases" type="submit" class="btn btn-primary">Load Phase</button>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Phase Name</th>
+                            <th>Phase Task</th>
+                            <th>Phase Comment</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Add Phases</h3>
+                </div>
+
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Phase Task</label>
+                        <input type="text" class="form-control" id="phaseTask">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Phase Comment</label>
+                        <input type="text" class="form-control" id="PhaseComment">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Phase Name </label>
+                        <select name="Phases" id="phases" class="form-control">
+                            @foreach (var phase in ViewBag.phases)
+                            {
+                                <option id=@phase.Id> @phase.Name </option>
+                            };
+                        </select>
+                    </div>
+                    <div class="card-footer">
+                        <button id="addPhase" type="submit" class="btn btn-primary">Add Phase</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+        <script src="../../plugins/jquery/jquery.min.js"></script>
+        <!-- Bootstrap 4 -->
+        <script src="../../plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <!-- bs-custom-file-input -->
+        <script src="../../plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
+        <!-- AdminLTE App -->
+        <script src="../../dist/js/adminlte.min.js"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="../../dist/js/demo.js"></script>
+</body>
+</html>
